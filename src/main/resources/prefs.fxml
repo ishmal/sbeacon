@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="232.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <TabPane layoutX="0.0" layoutY="0.0" prefHeight="193.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab text="Misc">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+          </content>
+        </Tab>
+        <Tab text="Audio">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="164.0" prefWidth="400.0">
+              <children>
+                <Label layoutX="14.0" layoutY="48.0" text="Input" />
+                <ChoiceBox id="" fx:id="inputDeviceList" layoutX="81.0" layoutY="45.0" prefWidth="281.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ChoiceBox>
+                <Label layoutX="14.0" layoutY="96.0" text="Output" />
+                <ChoiceBox id="" fx:id="outputDeviceList" layoutX="81.0" layoutY="94.0" prefWidth="281.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ChoiceBox>
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
+    <HBox layoutX="0.0" layoutY="200.0" prefHeight="32.0" prefWidth="400.0">
+      <children>
+        <Button mnemonicParsing="false" onAction="#doOk" prefHeight="32.0" prefWidth="200.0" text="Ok" />
+        <Button mnemonicParsing="false" onAction="#doCancel" prefHeight="32.0" prefWidth="200.0" text="Cancel" HBox.hgrow="SOMETIMES" />
+      </children>
+    </HBox>
+  </children>
+</AnchorPane>

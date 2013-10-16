@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <VBox layoutX="0.0" layoutY="3.0" prefHeight="397.0" prefWidth="600.0">
+      <children>
+        <MenuBar>
+          <menus>
+            <Menu mnemonicParsing="false" text="File">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#doClose" text="Close" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#doPrefs" text="Preferences" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#doAbout" text="About" />
+              </items>
+            </Menu>
+          </menus>
+        </MenuBar>
+        <AnchorPane id="fftBox" fx:id="fftAnchor" prefHeight="309.0" prefWidth="600.0" />
+        <FlowPane prefHeight="74.0" prefWidth="600.0">
+          <children>
+            <Label text="Period(ms)" />
+            <Slider prefWidth="533.0" />
+            <RadioButton mnemonicParsing="false" text="Normal" />
+            <RadioButton mnemonicParsing="false" text="3" />
+            <RadioButton mnemonicParsing="false" text="10" />
+            <RadioButton mnemonicParsing="false" text="30" />
+          </children>
+        </FlowPane>
+      </children>
+    </VBox>
+  </children>
+</AnchorPane>
