@@ -29,7 +29,7 @@
             </Menu>
           </menus>
         </MenuBar>
-        <AnchorPane id="fftBox" fx:id="fftAnchor" prefHeight="309.0" prefWidth="600.0" />
+        <AnchorPane id="" fx:id="fftBox" prefHeight="309.0" prefWidth="600.0" />
         <FlowPane prefHeight="74.0" prefWidth="600.0">
           <children>
             <Label text="Period(ms)" />

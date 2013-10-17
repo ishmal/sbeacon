@@ -6,6 +6,7 @@ package beacon
 import javafx.application.{Application, Platform}
 import javafx.stage.{Stage,WindowEvent}
 import javafx.scene.{Parent, Scene}
+import javafx.scene.layout.{AnchorPane}
 import javafx.fxml.{FXML,FXMLLoader}
 import javafx.event.{Event,EventHandler}
 import javafx.collections.{FXCollections,ObservableList}
@@ -118,7 +119,6 @@ class App extends Logged
         }
 		
     
-    val fft = new Fft(this)
 
 
     //########################################
@@ -185,8 +185,7 @@ class App extends Logged
 				val data = inputDevice.get.receive
 				if (data.isDefined)
 					{
-					fft.update(data.get)
-					//update gui here
+					update(data.get)
 					}
                 }
             }
@@ -208,7 +207,8 @@ class App extends Logged
         receiver.join
         }
 
-
+    //override me
+    def update(data: Array[Double]) = {}
     
     config.load
     
@@ -220,6 +220,9 @@ class App extends Logged
 
 class MainController(stage: Stage) extends App with Logged
 {
+
+    @FXML var fftBox : AnchorPane = _
+    val fft = new Fft(this)
 
     val prefsDialog = new PrefsDialog(this)
 
@@ -244,11 +247,17 @@ class MainController(stage: Stage) extends App with Logged
     def doPrefs(evt : Event) = prefsDialog.show
 
 
+    @FXML def initialize =
+        {
+        fftBox.getChildren.add(fft)
+        }
 
-
-
-
-
+    //overriden from App
+    override def update(data: Array[Double]) =
+        {
+        if (fft != null)
+            fft.update(data)
+        }
 
 }
 

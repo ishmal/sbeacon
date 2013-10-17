@@ -61,11 +61,11 @@ class Fft(par: App) extends Pane with Logged
     
     val maxFreq = 2500.0
     
-    val width  = 64
+    val stripCols  = 64
     
     val periods = 4
     val periodSamples = 1024
-    val length = periods * periodSamples
+    val stripRows = periods * periodSamples
 
     def bins =
         (maxFreq / par.sampleRate * N).toInt
@@ -73,8 +73,8 @@ class Fft(par: App) extends Pane with Logged
     val trans = new DFft(N)
 
 
-    val strip = Array.ofDim[Short](width, length)
-    var stripptr = 0
+    val strip = Array.ofDim[Short](stripRows, stripCols)
+    var stripRow = 0
     
     val frame = Array.fill(N)(0.0)
 
@@ -82,29 +82,32 @@ class Fft(par: App) extends Pane with Logged
     var skip = 2
     var framePtr = 0
     
-    
     def updateData =
         {
         val ps = trans.powerSpectrum(frame, bins)
         var pslen = ps.size
-        val row = strip(stripptr)
-        var rowptr = 0
-        stripptr = (stripptr + 1) % length
+        //trace("stripCols: " + stripCols + "  pslen: " + pslen)
+        val row = strip(stripRow)
+        stripRow = (stripRow + 1) % stripRows
+        var psptr = 0
         var acc = -pslen
-        for (p <- ps)
+        for (col <- 0 until stripCols)
             {
-            acc += width
-            if (acc >= 0)
+            val pix = (math.log1p(ps(psptr)) * 10.0).toShort
+            //trace("pix: " + pix)
+            row(col) = pix
+            while (acc < 0)
                 {
-                acc -= pslen
-                row(rowptr) = (math.log1p(p) * 10.0).toShort
-                wf.redraw
+                acc += stripCols
+                psptr += 1
                 }
+            acc -= pslen
             }
         }
 
     def update(data:  Array[Double]) =
         {
+        //trace("#################")
         for (d <- data)
             {
             frame(framePtr) = d
@@ -112,21 +115,43 @@ class Fft(par: App) extends Pane with Logged
             if (framePtr >= N)
                 {
                 framePtr = 0
+                updateData
+                wf.redraw
                 }
             }
         }
         
+    class Pixmap(width: Int, height: Int)
+        {
+        val nrPix  = width * height
+        val pixels = Array.ofDim[Int](nrPix)
+        val format = PixelFormat.getIntArgbInstance
+        val img    = new WritableImage(width, height)
+        val writer = img.getPixelWriter
+        
+        def poke(x: Int, y: Int, pix: Int) =
+           {
+           pixels(x + y * width) = pix
+           }
+           
+        def draw(g2d: GraphicsContext, x: Double, y: Double, w: Double, h: Double) =
+            {
+            writer.setPixels(0, 0, width, height, format, pixels, 0, width)
+            g2d.drawImage(img, x, y, w, h)
+            }
+        
+        def peek(x: Int, y: Int) =
+           {
+           pixels(x + y * width)
+           }
+        
+        }
+    
     class Waterfall(width: Double, height: Double) extends Canvas(width, height)
         {
         val iwidth = width.toInt
-        val iheight = height.toInt
-    
-        val img = new WritableImage(iwidth, iheight)
-        val nrPix = iwidth * iheight
-        val pixels = Array.ofDim[Int](nrPix)
-        val lastRow = nrPix - iwidth
-        val writer = img.getPixelWriter
-        val format = PixelFormat.getIntArgbInstance
+        val iheight = height.toInt  
+        val pixmap = new Pixmap(iwidth, iheight)
         val g2d = getGraphicsContext2D
                 
         /**
@@ -146,12 +171,33 @@ class Fft(par: App) extends Pane with Logged
             
         val refresher = new Runnable
             {
-            override def run = g2d.drawImage(img, 0.0, 0.0, width, height)
+            override def run = 
+                {
+                //trace("redraw: " + width + " / " + height)
+                pixmap.draw(g2d, 0.0, 0.0, width, height)
+                g2d.setFill(Color.BLUE)
+                g2d.strokeRect(100,100, 20,30)
+                }
             }
 
             
         def redraw =
             {
+            /** do our drawing here */
+            var rowptr = stripRow
+            for (x <- 0 until iwidth)
+                {
+                val row = strip(rowptr)
+                rowptr -= 1
+                if (rowptr < 0)
+                    rowptr = stripRows-1
+                for (col <- 0 until stripCols)
+                    {
+                    val idx = row(col)
+                    //trace("idx: " + idx)
+                    pixmap.poke(x, col, colors(idx))
+                    }
+                }
             Platform.runLater(refresher)
             }
 
@@ -163,8 +209,7 @@ class Fft(par: App) extends Pane with Logged
         
     override def layoutChildren =
         {
-        val width = getWidth
-        val height = getHeight
+        trace("layout")
         wf = new Waterfall(getWidth, getHeight)
         wf.relocate(0,0)
         getChildren.clear
