@@ -57,9 +57,9 @@ class DFft(N: Int)
 class Fft(par: App) extends Pane with Logged
 {
 
-    val N = 2048
+    val N = 512
     
-    val maxFreq = 2500.0
+    val maxFreq = 1200.0
     
     val stripCols  = 64
     
@@ -69,6 +69,8 @@ class Fft(par: App) extends Pane with Logged
 
     def bins =
         (maxFreq / par.sampleRate * N).toInt
+        
+    //trace("fs:" + par.sampleRate + "  bins:" + bins)
 
     val trans = new DFft(N)
 
@@ -79,7 +81,8 @@ class Fft(par: App) extends Pane with Logged
     val frame = Array.fill(N)(0.0)
 
 
-    var skip = 2
+    val SKIP = 10
+    var skipctr = 0
     var framePtr = 0
     
     def updateData =
@@ -93,7 +96,7 @@ class Fft(par: App) extends Pane with Logged
         var acc = -pslen
         for (col <- 0 until stripCols)
             {
-            val pix = (math.log1p(ps(psptr)) * 10.0).toShort
+            val pix = (math.log1p(ps(psptr)) * 20.0).toShort
             //trace("pix: " + pix)
             row(col) = pix
             while (acc < 0)
@@ -116,7 +119,12 @@ class Fft(par: App) extends Pane with Logged
                 {
                 framePtr = 0
                 updateData
-                wf.redraw
+                skipctr += 1
+                if (skipctr >= SKIP)
+                    {
+                    skipctr = 0
+                    wf.redraw
+                    }
                 }
             }
         }
@@ -175,8 +183,8 @@ class Fft(par: App) extends Pane with Logged
                 {
                 //trace("redraw: " + width + " / " + height)
                 pixmap.draw(g2d, 0.0, 0.0, width, height)
-                g2d.setFill(Color.BLUE)
-                g2d.strokeRect(100,100, 20,30)
+                //g2d.setFill(Color.BLUE)
+                //g2d.strokeRect(100,100, 20,30)
                 }
             }
 
@@ -185,7 +193,7 @@ class Fft(par: App) extends Pane with Logged
             {
             /** do our drawing here */
             var rowptr = stripRow
-            for (x <- 0 until iwidth)
+            for (x <- iwidth-1 to 0 by -1)
                 {
                 val row = strip(rowptr)
                 rowptr -= 1
@@ -195,7 +203,7 @@ class Fft(par: App) extends Pane with Logged
                     {
                     val idx = row(col)
                     //trace("idx: " + idx)
-                    pixmap.poke(x, col, colors(idx))
+                    pixmap.poke(x, col, colors(idx&255))
                     }
                 }
             Platform.runLater(refresher)
@@ -203,6 +211,12 @@ class Fft(par: App) extends Pane with Logged
 
         }//waterfall
         
+
+    AnchorPane.setLeftAnchor(this, 0)
+    AnchorPane.setTopAnchor(this, 0)
+    AnchorPane.setRightAnchor(this, 0)
+    AnchorPane.setBottomAnchor(this, 0)
+
     var wf = new Waterfall(500, 400)
     wf.relocate(0, 0)
     getChildren.addAll(wf)
@@ -217,10 +231,6 @@ class Fft(par: App) extends Pane with Logged
         }
 
 
-    AnchorPane.setLeftAnchor(this, 0)
-    AnchorPane.setTopAnchor(this, 0)
-    AnchorPane.setRightAnchor(this, 0)
-    AnchorPane.setBottomAnchor(this, 0)
 
 
 

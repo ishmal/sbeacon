@@ -137,7 +137,7 @@ case class AudioDeviceInfo(format: AudioFormat, mixerInfo: Mixer.Info)
 object AudioDevice extends Logged
 {
 
-    val sampleRate = 44100.0f
+    val sampleRate = 8000.0f
     
     /**
      * List conforming audio input devices
