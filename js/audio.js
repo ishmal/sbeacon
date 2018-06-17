@@ -9,13 +9,14 @@ export class AudioInput {
 		this.sampleRate = this.audioCtx.sampleRate;
 
 		let filter = audioCtx.createBiquadFilter();
-		filter.frequency.value = 700;
+		filter.frequency.value = 1000;
 		filter.type = "bandpass";
 		filter.Q.value = 100;
-		filter.gain.value = 25;
+		filter.gain.value = 15;
 
 		let analyzer = audioCtx.createAnalyser();
 		analyzer.fftSize = 2048;
+		analyzer.smoothingTimeConstant = 0.0;
 		let bufferLength = analyzer.frequencyBinCount;
 		this.dataArray = new Uint8Array(bufferLength);
 		this.analyzer = analyzer;

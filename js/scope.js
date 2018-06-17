@@ -26,10 +26,12 @@ export class Scope {
 		}
 		this.ribbonIndex = 0;
 		this.skipCounter = 0;
-		this.gradient = new Gradient(Gradient.color.darkblue, Gradient.color.floralwhite);
+		this.gradient = new Gradient(
+			Gradient.color.midnightblue,
+			Gradient.color.peachpuff);
 		this.timer = setInterval(() => {
 			this.refresh();
-		}, 50);
+		}, 10);
 	}
 
 	redraw() {
@@ -69,12 +71,14 @@ export class Scope {
 		}
 		let pos = RIBBON_WIDTH;
 		ctx.strokeStyle = "red";
+		ctx.beginPath();
 		ctx.moveTo(0, pos);
 		ctx.lineTo(width, pos);
 		ctx.stroke();
-		ctx.strokeStyle = "green";
+		ctx.strokeStyle = "lightgreen";
 		for (let i = 0 ; i < 3 ; i++) {
 			pos += RIBBON_WIDTH;
+			ctx.beginPath();
 			ctx.moveTo(0, pos);
 			ctx.lineTo(width, pos);
 			ctx.stroke();	
