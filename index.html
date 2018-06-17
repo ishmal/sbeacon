@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script type="module">
+	import { SBeaconWidget } from "./js/sbeacon.js";
+	document.addEventListener("DOMContentLoaded", () => {
+		new SBeaconWidget("scope");
+	});
+</script>
+</head>
+<body>
+
+<canvas id="scope" width="400px" height="400px"></canvas>
+
+</body>
+</html>
