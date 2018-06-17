@@ -1,11 +1,10 @@
 import { AudioInput } from "./audio.js";
 import { Scope } from "./scope.js";
 
-export class SBeaconWidget {
-	constructor(canvasId) {
-		let canvas = document.getElementById(canvasId);
-		let scope = new Scope(canvas);
-		let audioInput = new AudioInput(scope);
+export class SBeaconWidget{
+	constructor(id) {
+		let audioInput = new AudioInput();
+		let scope = new Scope(id, audioInput);
 		audioInput.start();
 	}
 }
