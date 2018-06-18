@@ -3,8 +3,9 @@ import { Scope } from "./scope.js";
 
 export class SBeaconWidget{
 	constructor(id) {
-		let audioInput = new AudioInput();
-		let scope = new Scope(id, audioInput);
+		let scope = new Scope(id);
+		let audioInput = new AudioInput(scope);
+		scope.audioInput = audioInput;
 		audioInput.start();
 	}
 }

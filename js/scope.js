@@ -11,13 +11,12 @@ export class Scope {
 	/**
 	 * 
 	 */
-	constructor(canvasId, audioInput) {
+	constructor(canvasId) {
 		let canvas = document.getElementById(canvasId);
 		this.canvas = canvas;
 
 		this.ctx = canvas.getContext('2d');
 		this.canvas = canvas;
-		this.audioInput = audioInput;
 		this.ribbon = [];
 		for (let i = 0 ; i < RIBBON_LENGTH ; i++) {
 			let row = new Array(RIBBON_WIDTH);
@@ -28,10 +27,14 @@ export class Scope {
 		this.skipCounter = 0;
 		this.gradient = new Gradient(
 			Gradient.color.midnightblue,
-			Gradient.color.white);
-		this.timer = setInterval(() => {
-			this.refresh();
-		}, 10);
+			Gradient.color.white
+		);
+		this.updateRate = 44100/2048;  //first guess
+		this.skipCount = 0;
+	}
+
+	setUpdateRate(val) {
+		this.updateRate = val; //actual
 	}
 
 	redraw() {
@@ -87,13 +90,19 @@ export class Scope {
 
 	}
 
-	refresh() {
-		let data = this.audioInput.getSpectrumData();
+	update(data) {
+		if (this.skipCount < 10) {
+			this.skipCount++;
+			return;
+		}
+		this.skipCount = 0;
 		let row = this.ribbon[this.ribbonIndex];
 		for (let i = 0 ; i < RIBBON_WIDTH ; i++) {
 			row[i] = data[i];
 		}
 		this.ribbonIndex = (this.ribbonIndex + 1) % RIBBON_LENGTH;
-		this.redraw();
+		requestAnimationFrame(() => {
+			this.redraw();
+		});
 	}
 }

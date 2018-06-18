@@ -1,8 +1,9 @@
 
+const BUFFER_SIZE = 2048
 
 export class AudioInput {
 
-	constructor() {
+	constructor(scope) {
 
 		let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 		this.audioCtx = audioCtx;
@@ -15,14 +16,24 @@ export class AudioInput {
 		filter.gain.value = 15;
 
 		let analyzer = audioCtx.createAnalyser();
-		analyzer.fftSize = 2048;
+		analyzer.fftSize = 1024;
 		analyzer.smoothingTimeConstant = 0.0;
 		let bufferLength = analyzer.frequencyBinCount;
 		this.dataArray = new Uint8Array(bufferLength);
 		this.analyzer = analyzer;
+
+		this.updateRate = this.sampleRate / BUFFER_SIZE;
+		scope.setUpdateRate(this.updateRate);
+		console.log(this.updateRate);
+		let scriptNode = audioCtx.createScriptProcessor(BUFFER_SIZE, 1, 1);
+		scriptNode.onaudioprocess = () => {
+			analyzer.getByteFrequencyData(this.dataArray);
+			scope.update(this.dataArray);
+		};
 		
 		filter.connect(analyzer);
-		analyzer.connect(audioCtx.destination);
+		analyzer.connect(scriptNode);
+		scriptNode.connect(audioCtx.destination);
 		
 		this.chain = filter;
 }
