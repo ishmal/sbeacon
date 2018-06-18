@@ -1,5 +1,5 @@
 
-const BUFFER_SIZE = 2048
+const BUFFER_SIZE = 1024;
 
 export class AudioInput {
 
