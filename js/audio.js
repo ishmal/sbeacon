@@ -22,6 +22,7 @@ export class AudioInput {
 		this.analyzer = analyzer;
 		
 		filter.connect(analyzer);
+		analyzer.connect(audioCtx.destination);
 		
 		this.chain = filter;
 }

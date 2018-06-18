@@ -1,17 +1,47 @@
 <!doctype html>
 <html>
-<head>
-<meta charset="utf-8">
-<script type="module">
-	import { SBeaconWidget } from "./js/sbeacon.js";
-	document.addEventListener("DOMContentLoaded", () => {
-		new SBeaconWidget("scope");
-	});
-</script>
-</head>
-<body>
 
-<canvas id="scope" width="512px" height="320px"></canvas>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	    crossorigin="anonymous">
+	<script type="module">
+		import { SBeaconWidget } from "./js/sbeacon.js"; document.addEventListener("DOMContentLoaded", () => { new SBeaconWidget("scope");
+		});
+	</script>
+</head>
+
+<body>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item active" aria-current="page">Home</li>
+			<li class="breadcrumb-item">
+				<a href="about.html">About</a>
+			</li>
+		</ol>
+	</nav>
+
+	<div class="container">
+		<h3>SBeacon QRSS Receiver</h3>
+
+		<canvas id="scope" width="512px" height="320px"></canvas>
+		<form>
+			<div class="form-check">
+				<input type="checkbox" class="form-check-input" id="contiguousBox">
+				<label class="form-check-label" for="contiguousBox">Contiguous</label>
+			</div>
+			<div class="form-group">
+				<label class="form-group-label" for="speedInput">Speed</label>
+				<input id="speedInput" type="number">
+			</div>
+			<div class="form-group">
+				<label class="form-group-label" for="periodInput">Period</label>
+				<input id="periodInput" type="number">
+			</div>
+		</form>
+
+	</div>
 
 </body>
+
 </html>

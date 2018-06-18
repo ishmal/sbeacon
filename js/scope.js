@@ -28,7 +28,7 @@ export class Scope {
 		this.skipCounter = 0;
 		this.gradient = new Gradient(
 			Gradient.color.midnightblue,
-			Gradient.color.peachpuff);
+			Gradient.color.white);
 		this.timer = setInterval(() => {
 			this.refresh();
 		}, 10);
